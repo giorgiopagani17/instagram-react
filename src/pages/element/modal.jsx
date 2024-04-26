@@ -49,6 +49,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
     const [comment, setComment] = useState('');
     const [commenti, setCommenti] = useState([]);
     const [index, setIndex] = useState(0);
+
     //Get Biografia e Password Utente
     useEffect(() => {
         const getInfoToUpdate = async () => {
@@ -458,7 +459,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                                 </div>
                                 <div className='description'>
                                     <img src={image_path} alt="User Image" className="imageUserModal" />
-                                    {username}
+                                    <strong>{username}</strong>
                                     <textarea
                                         id="Postdescription"
                                         onChange={handleChangeDescription}

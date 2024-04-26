@@ -125,6 +125,8 @@ function ProfilePage() {
   const handleShow2 = (imageUrl) => {
     if (parseInt(id) === parseInt(loggedInUserId)) {
       setAbleToDelete(true);
+    } else {
+      setAbleToDelete(false);
     }
     setShow2(true);
     setImage(imageUrl);
