@@ -21,10 +21,10 @@ const Register = () => {
     const navigate = useNavigate();
 
     const handleRegister = async () => {
-        // if (!recaptchaValue) {
-        //     setErrorMessage('Il captcha è obbligatorio');
-        //     return;
-        // }
+        if (!recaptchaValue) {
+            setErrorMessage('Il captcha è obbligatorio');
+            return;
+        }
 
         try {
             const response = await fetch('http://localhost/instagram/register.php', {
