@@ -297,7 +297,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
             });
             setPostLikes(prevState => ({
                 ...prevState,
-                [postId]: { num_likes: prevState[postId].num_likes + 1, liked: true }
+                [postId]: { num_likes: parseInt(prevState[postId].num_likes) + 1, liked: true }
             }));
             setIsAnimating(true);
             setIsLikeHovered(false); // Resetta lo stato dell'hover
@@ -320,7 +320,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
             if (response.status === 200) {
                 setPostLikes(prevState => ({
                     ...prevState,
-                    [postId]: { num_likes: prevState[postId].num_likes - 1, liked: false }
+                    [postId]: { num_likes: parseInt(prevState[postId].num_likes) - 1, liked: false }
                 }));
             } else {
                 console.error(`Errore durante la rimozione del like dal post ${postId}:`, response.statusText);
@@ -531,7 +531,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                                             {postInfo.descrizionepost && (
                                                 <p style={{ color: 'white' }}>
                                                     <img src={postInfo.imgProfile} alt="User Image" className="imageUserModal" />
-                                                    <strong>{postInfo.username}</strong> 
+                                                    <strong style={{ cursor: 'pointer' }} onClick={() => handleUserSearchedProfile(postInfo.user_id)}>{postInfo.username}</strong> 
                                                     <span> {postInfo.descrizionepost} </span>
                                                 </p>
                                             )}
@@ -539,7 +539,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                                                 commenti.map((commento, index) => (
                                                     <p key={index} style={{ color: 'white' }}>
                                                         <img src={`http://localhost/instagram/imgprofile.php?user_id=${commento.id}`} alt="User Image" className="imageUserModal" />
-                                                        <strong>{commento.username}</strong> 
+                                                        <strong style={{ cursor: 'pointer' }} onClick={() => handleUserSearchedProfile(commento.id)}>{commento.username}</strong> 
                                                         <span> {commento.text_commento} </span>
                                                     </p>
                                                 ))
