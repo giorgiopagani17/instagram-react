@@ -18,7 +18,7 @@ function HomePage() {
   const navigate = useNavigate();
   const [userPosts, setUserPosts] = useState([]);
   const [postLikes, setPostLikes] = useState({});
-  const [isAnimating, setIsAnimating] = useState({});
+  const [isAnimating, setIsAnimating] = useState({}); // State per gestire l'animazione del cuore
   const [isLikeHovered, setIsLikeHovered] = useState({});
   const loggedInUserId = useSelector((state) => state.user.value.id);
   const [showList, setShowList] = useState(false);
@@ -26,6 +26,11 @@ function HomePage() {
   const [id_post_list, setIdPostList] = useState(null);
   const [show, setShow] = useState(false);
   const [image, setImage] = useState(null);
+
+  // Funzione per impostare l'animazione del cuore
+  const setPostAnimations = (postId, value) => {
+    setIsAnimating(prevState => ({ ...prevState, [postId]: value }));
+  };
 
   useEffect(() => {
     const getUserPosts = async () => {
@@ -85,8 +90,9 @@ function HomePage() {
         return updatedLikes;
       });
 
-      setPostAnimations(prevState => ({ ...prevState, [postId]: true }));
-      setTimeout(() => setPostAnimations(prevState => ({ ...prevState, [postId]: false })), 300);
+      // Imposta l'animazione del cuore
+      setPostAnimations(postId, true);
+      setTimeout(() => setPostAnimations(postId, false), 300); // Imposta lo stato a false dopo 1 secondo
     } catch (error) {
       console.error(`Error while liking post ${postId}:`, error);
     }

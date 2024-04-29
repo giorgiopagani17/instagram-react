@@ -188,7 +188,19 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                     await uploadPost(id, blob, description);
                     // Chiudi la modale dopo il caricamento dell'immagine
                     handleClose();
-                    window.location.reload();
+                            // Ottenere l'URL completo
+            var currentURL = window.location.href;
+            
+            // Costruire l'URL della pagina del profilo
+            var profileURL = 'http://localhost:5173/profile/' + id;
+            
+            // Confrontare l'URL completo con l'URL della pagina del profilo
+            if (currentURL === profileURL) {
+                window.location.reload();
+            } else {
+                // Se l'URL corrente non è già la pagina del profilo, gestisci la ricerca del profilo
+                handleUserSearchedProfile(id);
+    }
                 } catch (error) {
                     console.error('Error uploading image:', error);
                 }
