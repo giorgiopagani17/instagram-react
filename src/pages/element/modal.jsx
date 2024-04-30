@@ -26,7 +26,6 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
     const [descriptionNew, setDescriptionNew] = useState("");
     const [password, setPassword] = useState("");
     const [biografia, setBiografia] = useState("");
-    const [passwordOld, setPasswordOld] = useState("");
     const [file, setFile] = useState(null);
     const [fileSelected, setFileSelected] = useState(false);
     const [description, setDescription] = useState('');
@@ -63,8 +62,6 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                     const data = response.data;
                     setDescriptionNew(data.descrizione); // Imposta la descrizione dalla risposta dell'API
                     setBiografia(data.descrizione); // Imposta la biografia dalla risposta dell'API
-                    setPassword(data.password); // Imposta la password dalla risposta dell'API
-                    setPasswordOld(data.password); // Imposta la password corrente dalla risposta dell'API
                 } else {
                     throw new Error('Network response was not ok');
                 }
@@ -238,34 +235,40 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                 description: descriptionNew
             };
     
-            // Verifica se i nuovi valori sono diversi dai valori correnti
-            if (usernameNew !== loggedInUserUsername || password !== passwordOld || biografia !== descriptionNew) {
-                const response = await axios.put(`http://localhost/instagram/updateinfo.php`, data, {
-                    params: {
-                        loggedInUserId: loggedInUserId
-                    }
-                });
-                if (usernameNew !== loggedInUserUsername || password !== passwordOld) {
+            // Effettua la chiamata API per aggiornare le informazioni dell'utente
+            const response = await axios.put(`http://localhost/instagram/updateinfo.php`, data, {
+                params: {
+                    loggedInUserId: loggedInUserId
+                }
+            });
+    
+            // Verifica se la descrizione è stata modificata
+            if (descriptionNew !== biografia & password == '' & usernameNew == loggedInUserUsername) {
+                // Se la descrizione è stata modificata, chiudi la modale e ricarica la pagina
+                handleClose();
+                window.location.reload();
+            } else if (usernameNew !== loggedInUserUsername || password !== '') {
                 handleClose();
                 handleLogout();
-                }
-                else{
-                    handleClose();
-                    window.location.reload();
-                }
             } else {
-                // Se i valori non sono cambiati, chiudi semplicemente la modale
+                // Se nessun campo è stato modificato, chiudi semplicemente la modale
                 handleClose();
             }
         } catch (error) {
+            // Gestione degli errori
             console.error('Errore durante la chiamata API per salvare le modifiche:', error);
-            if (error.response && error.response.status === 500) {
+            if (error.response && error.response.status === 404) {
                 // Se l'errore è di tipo 500, mostra un messaggio di avviso
-                alert("Username già esistente!");
+                alert("Password uguale a quella precedente");
+            } else if (error.response && error.response.status === 204) {
+                // Se l'errore è di tipo 500, mostra un messaggio di avviso
+                alert("Password uguale a quella precedente");
             }
             throw error;
         }
     };
+    
+    
 
     // Funzione per reimpostare l'immagine del profilo
     const defaultImgProfile = async (userId) => {
@@ -608,7 +611,7 @@ const ModalComponent = ({ number, image, ableToDelete, ...props }) => {
                         <Form.Control type="text" placeholder={loggedInUserUsername} value={usernameNew} onChange={(e) => setUsername(e.target.value)} />
                         <hr/>
                         <span>Password:</span>
-                        <Form.Control type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <Form.Control type="password" placeholder="Enter new password" onChange={(e) => setPassword(e.target.value)} />
                         <hr/>
                         <span>Biografia:</span>
                         <Form.Control type="text" placeholder="Enter Description" value={descriptionNew} onChange={(e) => setDescriptionNew(e.target.value)} />
